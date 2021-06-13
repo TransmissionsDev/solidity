@@ -105,7 +105,6 @@ struct CommandLineOptions
 	{
 		InputMode mode = InputMode::Compiler;
 		std::set<boost::filesystem::path> paths;
-		std::string standardJsonFile;
 		std::vector<ImportRemapper::Remapping> remappings;
 		bool addStdin = false;
 		boost::filesystem::path basePath = "";
