@@ -82,6 +82,32 @@ namespace solidity::frontend::test
 
 BOOST_AUTO_TEST_SUITE(CommandLineInterfaceTest)
 
+BOOST_AUTO_TEST_CASE(multiple_input_modes)
+{
+	array<string, 6> inputModeOptions = {
+		"--standard-json",
+		"--link",
+		"--assemble",
+		"--strict-assembly",
+		"--yul",
+		"--import-ast",
+	};
+	string expectedMessage =
+		"The following options are mutually exclusive: "
+		"--standard-json, --link, --assemble, --strict-assembly, --yul, --import-ast. "
+		"Select at most one.\n";
+
+	for (string const& mode1: inputModeOptions)
+		for (string const& mode2: inputModeOptions)
+			if (mode1 != mode2)
+			{
+				vector<string> commandLine = {"solc", mode1, mode2};
+				OptionsReaderAndMessages result = parseCommandLineAndReadInputFiles(commandLine);
+				BOOST_TEST(!result.success);
+				BOOST_TEST(result.stderrContent == expectedMessage);
+			}
+}
+
 BOOST_AUTO_TEST_CASE(cli_input)
 {
 	TemporaryDirectory tempDir1("file-reader-test-");
