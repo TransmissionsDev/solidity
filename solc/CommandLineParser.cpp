@@ -846,14 +846,15 @@ General Information)").c_str(),
 			m_options.output.stopAfter = CompilerStack::State::Parsed;
 	}
 
-	checkMutuallyExclusive({
+	if (!checkMutuallyExclusive({
 		g_strStandardJSON,
 		g_strLink,
 		g_strAssemble,
 		g_strStrictAssembly,
 		g_strYul,
 		g_strImportAst,
-	});
+	}))
+		return false;
 
 	if (m_args.count(g_strStandardJSON))
 	{
