@@ -35,10 +35,7 @@ namespace solidity::frontend
 
 void FileReader::setBasePath(boost::filesystem::path const& _path)
 {
-	if (_path.empty())
-		m_basePath = "";
-	else
-		m_basePath = normalizeCLIPathForVFS(_path);
+	m_basePath = (_path.empty() ? "" : normalizeCLIPathForVFS(_path));
 }
 
 void FileReader::setSource(boost::filesystem::path const& _path, SourceCode _source)

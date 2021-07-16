@@ -68,37 +68,37 @@ BOOST_AUTO_TEST_CASE(normalizeCLIPathForVFS_relative_path)
 	boost::filesystem::create_directories(tempDir.path() / "x/y/z");
 	TemporaryWorkingDirectory tempWorkDir(tempDir.path() / "x/y/z");
 
-	// NOTE: If path to work dir contains symlinks (of then the case on macOS), boost might resolve
+	// NOTE: If path to work dir contains symlinks (often the case on macOS), boost might resolve
 	// them, making the path different from tempDirPath.
-	boost::filesystem::path expectedWorkDir = boost::filesystem::current_path().parent_path().parent_path().parent_path();
+	boost::filesystem::path expectedPrefix = boost::filesystem::current_path().parent_path().parent_path().parent_path();
 	// On Windows tempDir.path() normally contains the drive letter while the normalized path should not.
-	expectedWorkDir = "/" / expectedWorkDir.relative_path();
-	soltestAssert(expectedWorkDir.is_absolute() || expectedWorkDir.root_path() == "/", "");
+	expectedPrefix = "/" / expectedPrefix.relative_path();
+	soltestAssert(expectedPrefix.is_absolute() || expectedPrefix.root_path() == "/", "");
 
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS(".") == expectedWorkDir / "x/y/z/");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./") == expectedWorkDir / "x/y/z/");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("../") == expectedWorkDir / "x/y/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS(".") == expectedPrefix / "x/y/z/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./") == expectedPrefix / "x/y/z/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("../") == expectedPrefix / "x/y/");
 
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a") == expectedWorkDir / "x/y/z/a");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/") == expectedWorkDir / "x/y/z/a/");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/.") == expectedWorkDir / "x/y/z/a/");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./a") == expectedWorkDir / "x/y/z/a");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./a/") == expectedWorkDir / "x/y/z/a/");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./a/.") == expectedWorkDir / "x/y/z/a/");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/b") == expectedWorkDir / "x/y/z/a/b");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/b/") == expectedWorkDir / "x/y/z/a/b/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a") == expectedPrefix / "x/y/z/a");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/") == expectedPrefix / "x/y/z/a/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/.") == expectedPrefix / "x/y/z/a/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./a") == expectedPrefix / "x/y/z/a");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./a/") == expectedPrefix / "x/y/z/a/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./a/.") == expectedPrefix / "x/y/z/a/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/b") == expectedPrefix / "x/y/z/a/b");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/b/") == expectedPrefix / "x/y/z/a/b/");
 
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("../a/b") == expectedWorkDir / "x/y/a/b");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("../../a/b") == expectedWorkDir / "x/a/b");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./a/b") == expectedWorkDir / "x/y/z/a/b");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("././a/b") == expectedWorkDir / "x/y/z/a/b");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("../a/b") == expectedPrefix / "x/y/a/b");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("../../a/b") == expectedPrefix / "x/a/b");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("./a/b") == expectedPrefix / "x/y/z/a/b");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("././a/b") == expectedPrefix / "x/y/z/a/b");
 
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/./b/") == expectedWorkDir / "x/y/z/a/b/");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/../a/b/") == expectedWorkDir / "x/y/z/a/b/");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/b/c/..") == expectedWorkDir / "x/y/z/a/b");
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/b/c/../") == expectedWorkDir / "x/y/z/a/b/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/./b/") == expectedPrefix / "x/y/z/a/b/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/../a/b/") == expectedPrefix / "x/y/z/a/b/");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/b/c/..") == expectedPrefix / "x/y/z/a/b");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("a/b/c/../") == expectedPrefix / "x/y/z/a/b/");
 
-	BOOST_TEST(FileReader::normalizeCLIPathForVFS("../../a/.././../p/../q/../a/b") == expectedWorkDir / "a/b");
+	BOOST_TEST(FileReader::normalizeCLIPathForVFS("../../a/.././../p/../q/../a/b") == expectedPrefix / "a/b");
 
 }
 

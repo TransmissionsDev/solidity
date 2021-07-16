@@ -92,7 +92,7 @@ public:
 	/// The path does not have to actually exist.
 	static boost::filesystem::path normalizeCLIPathForVFS(boost::filesystem::path const& _path);
 
-	/// Returns true if all the path components of @a _prefix are present at the beginning of @a _path.
+	/// @returns true if all the path components of @a _prefix are present at the beginning of @a _path.
 	/// Both paths must be absolute (or have slash as root) and normalized (no . or .. segments, no
 	/// multiple consecutive slashes).
 	/// Paths are treated as case-sensitive. Does not require the path to actually exist in the
@@ -101,11 +101,11 @@ public:
 	static bool isPathPrefix(boost::filesystem::path _prefix, boost::filesystem::path const& _path);
 
 	/// If @a _prefix is actually a prefix of @p _path, removes it from @a _path to make it relative.
-	/// Otherwise returns @a _path unchanged.
-	/// Returns '.' if @a _path and @_prefix are identical.
+	/// @returns The path without the prefix or unchanged path if there is not prefix.
+	/// If @a _path and @_prefix are identical, the result is '.'.
 	static boost::filesystem::path stripPrefixIfPresent(boost::filesystem::path _prefix, boost::filesystem::path const& _path);
 
-	// Returns true if the specified path is an UNC path.
+	// @returns true if the specified path is an UNC path.
 	// UNC paths start with // followed by a name (on Windows they can also start with \\).
 	// They are used for network shares on Windows. On UNIX systems they do not have the same
 	// functionality but usually they are still recognized and treated in a special way.
@@ -117,7 +117,7 @@ private:
 	/// absolute (or have slash as root).
 	static boost::filesystem::path absoluteDotDotPrefix(boost::filesystem::path const& _path);
 
-	/// Returns true if the path contains any .. segments.
+	/// @returns true if the path contains any .. segments.
 	static bool hasDotDotSegments(boost::filesystem::path const& _path);
 
 	/// Base path, used for resolving relative paths in imports.
